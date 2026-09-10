@@ -1,0 +1,25 @@
+services:
+  habitsdevapi:
+    image: habitsdevapi
+    build:
+      context: .
+      dockerfile: src/HabitsDev.Api/Dockerfile
+    ports:
+      - "5000:8000"
+      - "5001:8001"
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://HabitsDevSeq:5341/ingest/otlp"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+    depends_on:
+      - HabitsDevSeq
+
+  HabitsDevSeq:
+    image: datalust/seq:latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SEQ_FIRSTRUN_ADMINPASSWORD: ${SEQ_FIRSTRUN_ADMINPASSWORD}
+    volumes:
+      - ./.containers/seq_data:/data
+    ports:
+      - "5002:80"
+      - "5341:5341"
