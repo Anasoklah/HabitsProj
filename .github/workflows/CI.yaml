@@ -18,7 +18,7 @@ jobs:
       dotnet-version: '10.0.x'
 
    - name: Restore Dependencies
-     run: dotnet restore
+     run: dotnet restore "src/HabitsDev.slnx"
 
    - name: build Project  
      run: dotnet build "src/HabitsDev.slnx"  --configuration Release --no-restore
