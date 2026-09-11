@@ -1,3 +1,8 @@
+using System.Data;
+using HabitsDev.Api.database;
+using HabitsDev.Api.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
 using OpenTelemetry.Metrics;
@@ -7,6 +12,11 @@ using OpenTelemetry.Trace;
 var builder = WebApplication.CreateBuilder(args);
 
 
+
+builder.Services.AddDbContext<AppDbContext>(options => 
+options.UseNpgsql(builder.Configuration.GetConnectionString("default") , 
+npgoptions => npgoptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName , Schemas.Application))
+);
 
 builder.Services.AddOpenTelemetry()
 .ConfigureResource(resours => resours.AddService(builder.Environment.ApplicationName))
@@ -33,6 +43,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    await app.ApplyMigrationsAsync();
 }
 
 app.UseHttpsRedirection();
