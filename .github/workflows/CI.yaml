@@ -21,7 +21,7 @@ jobs:
      run: dotnet restore
 
    - name: build Project  
-     run: dotnet build HabitsDev.slnx  --configuration Release --no-restore
+     run: dotnet build "src/HabitsDev.slnx"  --configuration Release --no-restore
 
    - name: Run Tests
      run: dotnet test --no-build --verbosity normal
